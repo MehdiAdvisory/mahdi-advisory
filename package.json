@@ -6,18 +6,35 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "airtable:fetch": "node scripts/fetch-airtable-schema.cjs",
+    "airtable:generate": "node scripts/fetch-airtable-schema.cjs && node scripts/generate-airtable-schema.cjs && node scripts/fix-generated-schema.cjs"
+  },
+  "airtable-schema-generator": {
+    "mode": "manual",
+    "input": "src/server/libs/airtable/generated",
+    "output": "src/server/libs/airtable/generated",
+    "exceptions": {
+      "pluralize": [],
+      "depluralize": []
+    }
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "airtable": "^0.12.2",
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.72.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/airtable": "^0.10.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "airtable-schema-generator": "^1.6.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
