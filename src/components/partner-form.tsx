@@ -52,11 +52,32 @@ export function PartnerForm() {
         body: JSON.stringify(data),
       });
 
+      const contentType = res.headers.get("Content-Type") ?? "";
+
+      if (contentType.includes("application/pdf")) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const filename =
+          res.headers
+            .get("Content-Disposition")
+            ?.match(/filename="(.+?)"/)?.[1] ??
+          `Analyse_SSM_${data.nom_entreprise.replace(/\s+/g, "_")}.pdf`;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(url);
+        a.remove();
+
+        setSubmitState("success");
+        reset();
+        return;
+      }
+
+      const body = await res.json().catch(() => null);
       if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(
-          body?.error ?? `Erreur serveur (${res.status})`
-        );
+        throw new Error(body?.error ?? `Erreur serveur (${res.status})`);
       }
 
       setSubmitState("success");
@@ -155,7 +176,7 @@ export function PartnerForm() {
       <div className="flex flex-col items-center gap-4">
         {submitState === "success" && (
           <div className="w-full rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm text-green-700">
-            Formulaire envoyé avec succès !
+            Formulaire envoyé avec succès ! Le rapport PDF a été téléchargé.
           </div>
         )}
         {submitState === "error" && (

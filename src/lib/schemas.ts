@@ -4,8 +4,8 @@ export const CONTRACT_TYPES = [
   "CDI",
   "CDD",
   "Alternance",
-  "Stage",
-  "Intérim",
+  "Contrat d'apprentissage",
+  "Contrat de professionnalisation",
 ] as const;
 
 export const salarieSchema = z.object({
